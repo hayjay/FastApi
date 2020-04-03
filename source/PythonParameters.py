@@ -1,8 +1,9 @@
 from enum import Enum
 
 import uvicorn
-from fastapi import FastAPI, Query #query library is a built in module from fast api for validation
+from fastapi import FastAPI, Query, Body #query library is a built in module from fast api for validation
 from typing import List
+from pydantic import BaseModel
 
 class ModelName(str, Enum) :
     alexnet = "alex"
@@ -72,6 +73,22 @@ async def read_user_item(user_id: int, item_id: str, q: str = None, short: bool 
 #List[str] means an array of strings would be expected by the parameter
 async def get_items(item_id : List[str] = Query(..., min_length=2, max_length=10)):
     results = {"items" : item_id}
+    return results
+
+class Item(BaseModel):
+    name : str
+    description : str = None
+    price: float
+    tax : float = None
+
+class User(BaseModel):
+    username: str
+    full_name : str = None
+
+# PUT METHOD passing in data via form-body
+@app.put("/items_new/{item_id}")
+async def update_item(*, item_id : int, item : Item, user: User, q:int =  Body(...)):
+    results = {"item_id" : item_id, "item" : item, "user" : user, "q" : q}
     return results
 
 # url/files/folder/file.txt
