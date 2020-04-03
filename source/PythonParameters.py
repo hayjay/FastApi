@@ -87,7 +87,7 @@ class User(BaseModel):
 
 # PUT METHOD passing in data via form-body
 @app.put("/items_new/{item_id}")
-async def update_item(*, item_id : int, item : Item, user: User, q:int =  Body(...)):
+async def update_item(*, item_id : int, item : Item, user: User, q:int =  Body(...)): #means q is compulsory by passing ... as the first parameter of Body class
     results = {"item_id" : item_id, "item" : item, "user" : user, "q" : q}
     return results
 
